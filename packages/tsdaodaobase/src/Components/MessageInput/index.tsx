@@ -319,7 +319,13 @@ export default class MessageInput extends Component<MessageInputProps, MessageIn
                     </div>
                 </div>
                 <div className="wk-messageinput-inputbox" >
-                <Button>粘贴</Button>
+                <Button
+                        className="wk-messageinput-sendbtn"
+                        onClick={this.handleSend}
+                        style={{ width: `100px`, height: `40px`, borderRadius: `1px`, position: 'absolute', right: 30, bottom: 20 }}
+                    >
+                        <span>粘贴</span>
+                    </Button>
                     <MentionsInput
                         style={InputStyle.getStyle()}
                         value={value}

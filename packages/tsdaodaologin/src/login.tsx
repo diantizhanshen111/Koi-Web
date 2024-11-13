@@ -29,10 +29,10 @@ class Login extends Component<any, LoginState> {
                 <div className="wk-login-content">
                     <div className="wk-login-content-phonelogin" style={{ "display": vm.loginType === LoginType.phone ? "block" : "none" }}>
                         <div className="wk-login-content-logo">
-                            <img src={`/logo.png`} alt="logo" />
+                            <img src={require("./assets/logo.png")} alt="logo" />
                         </div>
                         <div className="wk-login-content-slogan">
-                            更愉快的与朋友交流
+                            {/* 更愉快的与朋友交流 */}
                         </div>
                         <div className="wk-login-content-form">
                             <input type="text" placeholder="手机号" onChange={(v) => {
