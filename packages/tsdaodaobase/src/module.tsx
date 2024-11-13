@@ -10,6 +10,7 @@ import {
   CMDContent,
   MessageText,
   Subscriber,
+  MessageImage,
 } from "wukongimjssdk";
 import React, { ElementType } from "react";
 import { Howl, Howler } from "howler";
@@ -559,21 +560,65 @@ export default class BaseModule implements IModule {
     WKApp.endpoints.registerMessageContextMenus(
       "contextmenus.copy",
       (message) => {
-        if (message.contentType !== MessageContentType.text) {
-          return null;
-        }
+        // if (message.contentType !== MessageContentType.text) {
+        //   return null;
+        // }
 
         return {
           title: "复制",
-          onClick: () => {
-            (function (s) {
-              document.oncopy = function (e) {
-                e.clipboardData?.setData("text", s);
-                e.preventDefault();
-                document.oncopy = null;
-              };
-            })((message.content as MessageText).text || "");
-            document.execCommand("Copy");
+          onClick: async () => {
+            if (message.contentType === MessageContentType.text) {
+              // 复制文本
+              await navigator.clipboard.writeText((message.content as MessageText).text || "");
+              console.log("文本复制成功");
+            }
+            if (message.contentType === MessageContentType.image) {
+              // 复制图片
+              let content = message.content;
+              let imgURL = WKApp.dataSource.commonDataSource.getImageURL(content.url, { width: content.width, height: content.height });
+              imgURL += "?filename=" + "image.png";
+              if (imgURL) {
+                try {
+                  const response = await fetch(imgURL);
+                  // 确保响应状态是成功的
+                  if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                  }
+                  const blob = await response.blob();
+                  // 将 Blob 数据转换为图片 URL
+                  const img = new Image();
+                  const url = URL.createObjectURL(blob);
+                  img.src = url;
+                  img.onload = async () => {
+                    // 将图片绘制到 Canvas 上
+                    const canvas = document.createElement("canvas");
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext("2d");
+                    if (ctx) {
+                      ctx.drawImage(img, 0, 0);
+                      // 将 Canvas 转换为图片 Blob
+                      canvas.toBlob(async (pngBlob) => {
+                        if (pngBlob) {
+                          const item = new ClipboardItem({ 'image/png': pngBlob });
+                          await navigator.clipboard.write([item]);
+                          console.log("图片复制成功");
+                          URL.revokeObjectURL(url); // 释放 URL
+                        } else {
+                          console.error("图片转换为PNG格式失败");
+                        }
+                      });
+                    }
+                  };
+                  img.onerror = () => {
+                    console.error("图片加载失败");
+                    URL.revokeObjectURL(url); // 释放 URL
+                  };
+                } catch (error) {
+                  console.error("图片复制失败:", error);
+                }
+              }
+            }
           },
         };
       },

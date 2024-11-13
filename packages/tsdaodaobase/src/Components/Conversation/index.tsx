@@ -86,6 +86,7 @@ export class Conversation extends Component<ConversationProps> implements Conver
     deleteMessages(messages: Message[]): void {
         this.vm.deleteMessages(messages)
     }
+   
     revokeMessage(message: Message): Promise<void> {
         return this.vm.revokeMessage(message)
     }

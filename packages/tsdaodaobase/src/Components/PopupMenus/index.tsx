@@ -5,7 +5,7 @@ export default class PopupMenus extends Component<any> {
 
 
     render() {
-        const { hiddenMulti, hiddenRevoke, onMultiple,hiddenFavorites,onFavorites, onForward, onMessageRevoke, onMessageDelete, hiddenComment, onCommentClick } = this.props;
+        const { hiddenMulti,hiddenCopy, hiddenRevoke, onMultiple,hiddenFavorites,onFavorites, onForward,onCopy, onMessageRevoke, onMessageDelete, hiddenComment, onCommentClick } = this.props;
 
         return (
             <div className="wk-popupmenus">
@@ -20,10 +20,10 @@ export default class PopupMenus extends Component<any> {
                 {/* 转发 */}
                 <div title="转发" className={clsName("wk-popupmenus-item", "wk-popupmenus-forward")} onClick={onForward}>
                 </div>
-                {/* {
-                    !hiddenCopy?( <div title="复制" className={clsName(style.menusItem, style.copy)} onClick={onCopy}>
-                    </div>):null
-                } */}
+                {
+                   <div title="复制" className={clsName("wk-popupmenus-item", "wk-popupmenus-copy")} onClick={onCopy}>
+                    </div>
+                }
                 {
                     !hiddenFavorites?( <div title="收藏" className={clsName("wk-popupmenus-item", "wk-popupmenus-favorites")} onClick={onFavorites}>
                     </div>):null

@@ -35,6 +35,13 @@ export default interface ConversationContext {
       */
      deleteMessages(messages: Message[]): void
 
+     
+     /**
+      *  复制消息
+      * @param message 
+      */
+     copyMessage(message:Message) :void
+
      /**
       *  撤回消息
       * @param message 
