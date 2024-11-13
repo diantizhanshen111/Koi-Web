@@ -221,7 +221,27 @@ export default class MessageInput extends Component<MessageInputProps, MessageIn
             })
         }
     }
-
+    handleSend = () => {
+        const { value } = this.state;
+        if (value && value.length > 1000) {
+          Notification.error({
+            content: "输入内容长度不能大于1000字符！",
+          });
+          return;
+        }
+        if (this.props.onSend && value && value.trim() !== "") {
+          let formatValue = this.formatMentionText(value);
+          let mention = this.parseMention(formatValue);
+          this.props.onSend(formatValue, mention);
+        }
+        this.setState({
+          value: '',
+          quickReplySelectIndex: 0,
+          mentionCache: {},
+        });
+      };
+    
+     
     render() {
         const { members, onInputRef, topView, toolbar } = this.props
         const { value, mentionCache } = this.state
@@ -299,6 +319,7 @@ export default class MessageInput extends Component<MessageInputProps, MessageIn
                     </div>
                 </div>
                 <div className="wk-messageinput-inputbox" >
+                <Button>粘贴</Button>
                     <MentionsInput
                         style={InputStyle.getStyle()}
                         value={value}
@@ -313,7 +334,8 @@ export default class MessageInput extends Component<MessageInputProps, MessageIn
                                 onInputRef(ref)
                             }
                         }}
-                    >
+                    > 
+                   
                         <Mention
                             className="mentions__mention"
                             trigger={new RegExp(
@@ -344,6 +366,14 @@ export default class MessageInput extends Component<MessageInputProps, MessageIn
                             }}
                         />
                     </MentionsInput>
+                      {/* 发送按钮 */}
+                    <Button
+                        className="wk-messageinput-sendbtn"
+                        onClick={this.handleSend}
+                        style={{ width: `100px`, height: `40px`, borderRadius: `1px`, position: 'absolute', right: 30, bottom: 20 }}
+                    >
+                        <span>发送(S)</span>
+                    </Button>
                 </div>
 
             </div>

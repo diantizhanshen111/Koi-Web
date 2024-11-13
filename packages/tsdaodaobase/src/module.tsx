@@ -567,6 +567,16 @@ export default class BaseModule implements IModule {
         return {
           title: "复制",
           onClick: async () => {
+              // 直接复制用户选中的文本内容
+              const selection = window.getSelection();
+              if (selection.toString()) {
+                try {
+                  await navigator.clipboard.writeText(selection.toString());
+                  console.log("选中的文本复制成功");
+                } catch (err) {
+                  console.error("复制失败: ", err);
+                }
+              }
             if (message.contentType === MessageContentType.text) {
               // 复制文本
               await navigator.clipboard.writeText((message.content as MessageText).text || "");
