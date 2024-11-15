@@ -15,6 +15,18 @@ import { Channel, ChannelInfo, WKSDK } from "wukongimjssdk";
 import { ChannelInfoListener } from "wukongimjssdk";
 import { ChatMenus } from "../../App";
 import ConversationContext from "../../Components/Conversation/context";
+import {
+  Contacts,
+  ContactsChangeListener,
+  ContextMenus,
+  ContextMenusContext,
+
+  WKBase,
+  WKBaseContext,
+  WKNavMainHeader,
+  Search,
+  UserRelation,
+} from "@tsdaodao/base";
 
 export interface ChatContentPageProps {
   channel: Channel;
@@ -195,7 +207,21 @@ export default class ChatPage extends Component<any> {
               >
                 <div className="wk-chat-content-left">
                   <div className="wk-chat-search">
-                    <div className="wk-chat-title">{vm.connectTitle}</div>
+                    <div className="wk-contacts-content-header">
+                      <Search
+                        placeholder="搜索"
+                        onChange={(v) => {
+                          this.setState(
+                            {
+                              keyword: v,
+                            },
+                            () => {
+                              // this.rebuildIndex();
+                            }
+                          );
+                        }}
+                      ></Search>
+                    </div>
                     <Popover
                       onClickOutSide={() => {
                         vm.showAddPopover = false;
