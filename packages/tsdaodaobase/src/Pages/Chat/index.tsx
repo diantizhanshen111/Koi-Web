@@ -31,6 +31,7 @@ import {
 export interface ChatContentPageProps {
   channel: Channel;
   initLocateMessageSeq?: number;
+  
 }
 
 export interface ChatContentPageState {
@@ -179,8 +180,13 @@ export class ChatContentPage extends Component<
 
 export default class ChatPage extends Component<any> {
   vm!: ChatVM;
+  keyword?: string;
   constructor(props: any) {
     super(props);
+    // 初始化 state
+    this.state = {
+      keyword: '', // 在这里初始化 keyword
+    };
   }
 
   componentDidMount() {
@@ -190,13 +196,18 @@ export default class ChatPage extends Component<any> {
   componentWillUnmount() {}
 
   render(): ReactNode {
+    const { keyword } = this.state; // 使用解构来获取 keyword 状态
     return (
       <Provider
         create={() => {
           this.vm = new ChatVM();
           return this.vm;
+          
         }}
+        
         render={(vm: ChatVM) => {
+          // console.log("keyword1", keyword); // 使用 
+          //  console.log("conversations22"+JSON.stringify(vm.conversations));
           return (
             <div className="wk-chat">
               <div
@@ -216,6 +227,8 @@ export default class ChatPage extends Component<any> {
                               keyword: v,
                             },
                             () => {
+                             // 现在可以安全地访问 this.state.keyword
+                              // console.log("Updated keyword:", keyword);
                               // this.rebuildIndex();
                             }
                           );
@@ -252,6 +265,7 @@ export default class ChatPage extends Component<any> {
                                 }}></Button> */}
                     </Popover>
                   </div>
+                 
                   <div className="wk-chat-conversation-list">
                     {vm.loading ? (
                       <div className="wk-chat-conversation-list-loading">
@@ -260,6 +274,7 @@ export default class ChatPage extends Component<any> {
                     ) : (
                       <ConversationList
                         select={WKApp.shared.openChannel}
+                        keyword={keyword}
                         conversations={vm.conversations}
                         onClick={(conversation: ConversationWrap) => {
                           vm.selectedConversation = conversation;

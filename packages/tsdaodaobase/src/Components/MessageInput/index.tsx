@@ -319,7 +319,6 @@ export default class MessageInput extends Component<MessageInputProps, MessageIn
                     </div>
                 </div>
                 <div className="wk-messageinput-inputbox" >
-            
                     <MentionsInput
                         style={InputStyle.getStyle()}
                         value={value}

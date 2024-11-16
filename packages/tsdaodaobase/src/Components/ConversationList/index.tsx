@@ -20,6 +20,7 @@ import WKAvatar from "../WKAvatar";
 export interface ConversationListProps {
     conversations: ConversationWrap[]
     select?: Channel
+    keyword?: string
     onClick?: (conversation: ConversationWrap) => void
 }
 
@@ -126,18 +127,18 @@ export default class ConversationList extends Component<ConversationListProps, C
 
     // 是否需要显示在线状态
     needShowOnlineStatus(channelInfo?: ChannelInfo) {
-        if (!channelInfo) {
-            return false
-        }
-        if (channelInfo.online) {
-            return true
-        }
-        const nowTime = new Date().getTime() / 1000
-        const btwTime = nowTime - channelInfo.lastOffline
-        if (btwTime > 0 && btwTime < 60 * 60) { // 小于1小时才显示
-            return true
-        }
-        return false
+        // if (!channelInfo) {
+        //     return false
+        // }
+        // if (channelInfo.online) {
+        //     return true
+        // }
+        // const nowTime = new Date().getTime() / 1000
+        // const btwTime = nowTime - channelInfo.lastOffline
+        // if (btwTime > 0 && btwTime < 60 * 60) { // 小于1小时才显示
+        //     return true
+        // }
+        // return false
     }
 
     conversationItem(conversationWrap: ConversationWrap) {
@@ -147,6 +148,7 @@ export default class ConversationList extends Component<ConversationListProps, C
         if (!channelInfo) {
             WKSDK.shared().channelManager.fetchChannelInfo(conversationWrap.channel)
         }
+        // console.log("channelInfo"+JSON.stringify(channelInfo));
 
         const { select, onClick } = this.props
         const typing = TypingManager.shared.getTyping(conversationWrap.channel)
@@ -243,11 +245,20 @@ export default class ConversationList extends Component<ConversationListProps, C
     }
 
     render() {
-        const { conversations, select } = this.props
+        const { conversations, select,keyword } = this.props
+        console.log("keyword"+keyword);
+        // console.log("conversations"+JSON.stringify(conversations));
+        const filteredConversations = conversations.filter((conversationWrap) => {
+            let channelInfo = conversationWrap.channelInfo;
+            // 检查 channelInfo 和 displayName 是否包含 keyword
+            return keyword ? channelInfo?.orgData.displayName.toLowerCase().includes(keyword.toLowerCase()) : true;
+          });
+          
         const { selectConversationWrap } = this.state
         return <div id="wk-conversationlist" className="wk-conversationlist" onScroll={this._handleScroll.bind(this)}>
             {
-                conversations && conversations.map((conversationWrap) => {
+                filteredConversations && filteredConversations.map((conversationWrap) => {
+                    // console.log("conversationWrap"+JSON.stringify(conversationWrap));
                     return this.conversationItem(conversationWrap)
                 })
             }
