@@ -28,7 +28,7 @@ import { ConnectStatus } from "wukongimjssdk";
 import { WKBaseContext } from "./Components/WKBase";
 import StorageService from "./Service/StorageService";
 import { ProhibitwordsService } from "./Service/ProhibitwordsService";
-
+import { ChatContentPage } from './Pages/Chat/index'
 export enum ThemeMode {
   light,
   dark,
@@ -225,6 +225,7 @@ export default class WKApp extends ProviderListener {
   static dataSource: DataSource = new DataSource(); // 数据源
   static endpointManager: EndpointManager = EndpointManager.shared; // 端点管理
   static mittBus = mitt();
+  static mainWindow = null;
   private messageDeleteListeners: MessageDeleteListener[] =
     new Array<MessageDeleteListener>(); // 消息删除监听
 
@@ -687,3 +688,5 @@ export class ChatMenus {
   sort?: number = 0;
   onClick?: () => void;
 }
+
+export {ChatContentPage};

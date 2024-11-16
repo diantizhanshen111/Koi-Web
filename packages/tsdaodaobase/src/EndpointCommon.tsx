@@ -16,6 +16,7 @@ export class EndpointCommon {
 
   constructor() {
     this.registerShowConversation();
+    this.registerShowConversationNewWindow();
   }
 
   addOnLogin(v: VoidFunction) {
@@ -35,6 +36,14 @@ export class EndpointCommon {
   showConversation(channel: Channel) {
     WKApp.shared.openChannel = channel;
     EndpointManager.shared.invoke(EndpointID.showConversation, {
+      channel: channel,
+    });
+    WKApp.shared.notifyListener();
+  }
+
+  showConversationNewWindow(channel: Channel | any) {
+    WKApp.shared.openChannel = channel;
+    EndpointManager.shared.invoke(EndpointID.showConversationNewWindow, {
       channel: channel,
     });
     WKApp.shared.notifyListener();
@@ -84,6 +93,41 @@ export class EndpointCommon {
             initLocateMessageSeq={initLocateMessageSeq}
           ></ChatContentPage>
         );
+      },
+      {}
+    );
+  }
+
+  private registerShowConversationNewWindow() {
+    EndpointManager.shared.setMethod(
+      EndpointID.showConversationNewWindow,
+      (param: any) => {
+        const channel = param.channel as Channel;
+        const conversation =
+          WKSDK.shared().conversationManager.findConversation(channel);
+        let initLocateMessageSeq = 0;
+        if (
+          conversation &&
+          conversation.lastMessage &&
+          conversation.unread > 0 &&
+          conversation.lastMessage.messageSeq > conversation.unread
+        ) {
+          initLocateMessageSeq =
+            conversation.lastMessage.messageSeq - conversation.unread;
+        }
+        window.ipc.send("showConversationNewWindow", JSON.stringify({
+            key: channel.getChannelKey(),
+            channel,
+            initLocateMessageSeq
+        }))
+        // const ipc: any = window.ipc.send("test")
+        // WKApp.routeRight.replaceToRoot(
+        //   <ChatContentPage
+        //     key={channel.getChannelKey()}
+        //     channel={channel}
+        //     initLocateMessageSeq={initLocateMessageSeq}
+        //   ></ChatContentPage>
+        // );
       },
       {}
     );

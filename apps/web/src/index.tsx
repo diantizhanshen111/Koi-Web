@@ -11,7 +11,7 @@ import {GroupManagerModule} from '@tsdaodao/groupmanager';
 import { RTCModule } from '@tsdaodao/rtc';
 import { FileModule } from '@tsdaodao/file';
 
-const apiURL = "http://154.91.65.37:8090/v1/";
+const apiURL = "http://154.211.96.50:81/v1/";
 
 if ((window as any).__TAURI_IPC__) {
   // tauri环境
@@ -45,7 +45,6 @@ WKApp.shared.registerModule(new RTCModule());//rtc
 WKApp.shared.registerModule(new FileModule());//fie
 
 WKApp.shared.startup(); // app启动
-
 ReactDOM.render(
   <React.StrictMode>
     <App />

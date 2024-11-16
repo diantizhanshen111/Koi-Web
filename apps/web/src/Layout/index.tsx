@@ -7,10 +7,14 @@ import { Notification as NotificationUI, Button } from '@douyinfe/semi-ui';
 import { UpdateManifest, checkUpdate, installUpdate } from '@tauri-apps/api/updater'
 import { relaunch } from '@tauri-apps/api/process'
 import { os } from "@tauri-apps/api";
-
+import { ChatContentPage } from '@tsdaodao/base'
+import { Channel } from "wukongimjssdk";
 
 export default class AppLayout extends Component {
     onLogin!: () => void
+    state = {
+      chatData: null
+    };
     componentDidMount() {
         this.onLogin = () => {
             console.log("登录成功！")
@@ -19,7 +23,18 @@ export default class AppLayout extends Component {
             Notification.requestPermission() // 请求通知权限
         }
         WKApp.endpoints.addOnLogin(this.onLogin)
+        const ipc: any = window.ipc
+        ipc.on("newWindowChatData", (e, data) => {
+          try {
+            const _data = JSON.parse(data)
+            _data.channel = new Channel(_data.channel.channelID, _data.channel.channelType)
+            this.setState({
+              chatData: _data
+            })
+          } catch {
 
+          }
+        })
 
         this.tauriCheckUpdate()
 
@@ -102,7 +117,24 @@ export default class AppLayout extends Component {
                 console.log("goto main----111>", ctx)
                 WKApp.shared.baseContext = ctx
             }}>
-                <MainPage />
+              {
+                !this.state.chatData ?
+                  <MainPage /> :
+                  <div style={{
+                    width: '100%',
+                    height: '100%',
+                    position: 'absolute',
+                    background: 'var(--wk-color-secondary)',
+                    transition:' transform var(--wk-layer-transition)',
+                    overflow: 'hidden'
+                    }}>
+                      <ChatContentPage
+                      key={this.state.chatData.key}
+                      channel={this.state.chatData.channel}
+                      initLocateMessageSeq={this.state.chatData.initLocateMessageSeq}
+                    ></ChatContentPage>
+                  </div>
+              }
             </WKBase>
         }} />
 

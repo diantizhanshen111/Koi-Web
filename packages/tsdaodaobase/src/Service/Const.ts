@@ -6,6 +6,7 @@ export  class  EndpointID {
   static  menusPrefix = "menus:"; // 菜单前缀
   static conversationListItem = "conversationList.item" // 最近会话列表的item
   static showConversation = "showConversation" // 显示会话页面
+  static showConversationNewWindow = "showConversationNewWindow" // 显示会话页面
   static clearChannelMessages :string = "clearChannelMessages" // 清空某个频道消息
   static emojiService = "emojiService" // emoji服务
 }

@@ -6,14 +6,11 @@ import { EndpointManager } from "./Module";
 
 export default class RouteManager {
   private constructor() {
-    console.log("RouteManager init")
     window.onpopstate = function (e:any) {
-      console.log("onpopstate---->",e)
       RouteManager.shared.push(window.location.pathname)
 
     };
     window.onpageshow = function () {
-      console.log("onpageshow---->",window.location.pathname)
       RouteManager.shared.push(window.location.pathname)
     };
     this.currentPath = "/"

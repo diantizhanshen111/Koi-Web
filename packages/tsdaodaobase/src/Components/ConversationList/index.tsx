@@ -256,6 +256,12 @@ export default class ConversationList extends Component<ConversationListProps, C
                 this.contextMenusContext = ctx
             }} menus={[
                 {
+                  title: '新窗口打开',
+                  onClick: () => {
+                    WKApp.endpoints.showConversationNewWindow(selectConversationWrap?.channel)
+                  }
+                },
+                {
                     title: selectConversationWrap?.channelInfo?.top ? "取消置顶" : "置顶", onClick: () => {
                         this.onTop(selectConversationWrap?.channelInfo!)
                     }
